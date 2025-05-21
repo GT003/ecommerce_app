@@ -68,157 +68,158 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.red,
-          title: const Text(
-            'FashApp',
-            style: TextStyle(color: Colors.white),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.search),
-              color: Colors.white,
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.shopping_cart),
-              color: Colors.white,
-            ),
-          ],
+      appBar: AppBar(
+        backgroundColor: Colors.red,
+        title: const Text(
+          'FashApp',
+          style: TextStyle(color: Colors.white),
         ),
-        drawer: Drawer(
-          backgroundColor: Colors.white,
-          child: ListView(
-            children: [
-              UserAccountsDrawerHeader(
-                accountName: Text('GT'),
-                accountEmail: Text('annamurikannamurikow@gmail.com'),
-                currentAccountPicture: GestureDetector(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white,
-                    ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.search),
+            color: Colors.white,
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.shopping_cart),
+            color: Colors.white,
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        backgroundColor: Colors.white,
+        child: ListView(
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text('GT'),
+              accountEmail: Text('annamurikannamurikow@gmail.com'),
+              currentAccountPicture: GestureDetector(
+                child: CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
                   ),
                 ),
-                decoration: BoxDecoration(
+              ),
+              decoration: BoxDecoration(
+                color: Colors.red,
+              ),
+            ),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('Home'),
+                leading: Icon(
+                  Icons.home,
                   color: Colors.red,
                 ),
               ),
-              InkWell(
-                onTap: () {},
-                child: ListTile(
-                  title: Text('Home'),
-                  leading: Icon(
-                    Icons.home,
-                    color: Colors.red,
-                  ),
+            ),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('My account'),
+                leading: Icon(Icons.person, color: Colors.red),
+              ),
+            ),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('My orders'),
+                leading: Icon(
+                  Icons.shopping_basket,
+                  color: Colors.red,
                 ),
               ),
-              InkWell(
-                onTap: () {},
-                child: ListTile(
-                  title: Text('My account'),
-                  leading: Icon(Icons.person, color: Colors.red),
+            ),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('Categories'),
+                leading: Icon(Icons.dashboard, color: Colors.red),
+              ),
+            ),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('Favourites'),
+                leading: Icon(
+                  Icons.favorite,
+                  color: Colors.red,
                 ),
               ),
-              InkWell(
-                onTap: () {},
-                child: ListTile(
-                  title: Text('My orders'),
-                  leading: Icon(
-                    Icons.shopping_basket,
-                    color: Colors.red,
-                  ),
+            ),
+            Divider(),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('Settings'),
+                leading: Icon(
+                  Icons.settings,
+                  color: Colors.blue,
                 ),
               ),
-              InkWell(
-                onTap: () {},
-                child: ListTile(
-                  title: Text('Categories'),
-                  leading: Icon(Icons.dashboard, color: Colors.red),
+            ),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('About'),
+                leading: Icon(
+                  Icons.help,
+                  color: Colors.green,
                 ),
               ),
-              InkWell(
-                onTap: () {},
-                child: ListTile(
-                  title: Text('Favourites'),
-                  leading: Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              Divider(),
-              InkWell(
-                onTap: () {},
-                child: ListTile(
-                  title: Text('Settings'),
-                  leading: Icon(
-                    Icons.settings,
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: ListTile(
-                  title: Text('About'),
-                  leading: Icon(
-                    Icons.help,
-                    color: Colors.green,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Слайдер баннеров
-              SizedBox(
-                height: MediaQuery.of(context).size.width *
-                    0.5, // вместо height: 200
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: imgList.length,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                  },
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          imgList[index],
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          gaplessPlayback: true,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 10),
-              SmoothPageIndicator(
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Слайдер баннеров
+            SizedBox(
+              height:
+                  MediaQuery.of(context).size.width * 0.5, // вместо height: 200
+              child: PageView.builder(
                 controller: _pageController,
-                count: imgList.length,
-                effect: const WormEffect(
-                  dotHeight: 8,
-                  dotWidth: 8,
-                  activeDotColor: Colors.red,
-                  dotColor: Colors.grey,
-                ),
+                itemCount: imgList.length,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        imgList[index],
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        gaplessPlayback: true,
+                      ),
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
-        ));
+            ),
+            const SizedBox(height: 10),
+            SmoothPageIndicator(
+              controller: _pageController,
+              count: imgList.length,
+              effect: const WormEffect(
+                dotHeight: 8,
+                dotWidth: 8,
+                activeDotColor: Colors.red,
+                dotColor: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

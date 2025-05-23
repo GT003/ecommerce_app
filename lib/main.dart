@@ -3,17 +3,69 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:async';
 
 void main() {
-  runApp(
-    MaterialApp(
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _themeMode = ThemeMode.system;
+
+  void toggleTheme(bool isDark) {
+    setState(() {
+      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
-    ),
-  );
+      themeMode: _themeMode,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primarySwatch: Colors.red,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.red,
+          iconTheme: IconThemeData(color: Colors.white),
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.red,
+        scaffoldBackgroundColor: Color.fromARGB(255, 75, 75, 75),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Color.fromARGB(255, 75, 75, 75),
+          iconTheme: IconThemeData(color: Colors.white),
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
+      home: HomePage(
+        isDarkMode: _themeMode == ThemeMode.dark,
+        onThemeChanged: toggleTheme,
+      ),
+    );
+  }
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final ValueChanged<bool> onThemeChanged;
 
+  final bool isDarkMode;
+  const HomePage({
+    super.key,
+    this.isDarkMode = false,
+    required this.onThemeChanged,
+  });
+
+  @override
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -32,7 +84,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
+    _startAutoPlayTimer();
     // Запускаем таймер автоплея
     _timer = Timer.periodic(Duration(seconds: 4), (timer) {
       if (!_pageController.hasClients) return;
@@ -50,11 +102,29 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _startAutoPlayTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (!_pageController.hasClients) return;
+
+      int nextPage = (_pageController.page?.round() ?? 0) + 1;
+      if (nextPage >= imgList.length) {
+        nextPage = 0;
+      }
+
+      _pageController.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
   @override
   void dispose() {
-    _timer?.cancel(); // Остановить таймер автоплея
-    _pageController.dispose(); // Освободить PageController
-    super.dispose(); // Вызвать dispose у родителя
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -68,8 +138,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      onDrawerChanged: (isOpened) {
+        if (isOpened) {
+          _timer?.cancel();
+        } else {
+          _startAutoPlayTimer();
+        }
+      },
       appBar: AppBar(
         backgroundColor: Colors.red,
+        iconTheme: IconThemeData(color: Colors.white),
         title: const Text(
           'FashApp',
           style: TextStyle(color: Colors.white),
@@ -172,6 +250,18 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+
+            // Переключатель темы:
+            const Divider(),
+            ListTile(
+              title: const Text('Темная тема'),
+              trailing: Switch(
+                value: widget.isDarkMode,
+                onChanged: (value) {
+                  widget.onThemeChanged(value);
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -189,6 +279,9 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     _currentIndex = index;
                   });
+                  // Сброс и запуск автоплея при ручном свайпе
+                  _timer?.cancel();
+                  _startAutoPlayTimer();
                 },
                 itemBuilder: (context, index) {
                   return Container(
@@ -216,6 +309,14 @@ class _HomePageState extends State<HomePage> {
                 activeDotColor: Colors.red,
                 dotColor: Colors.grey,
               ),
+              onDotClicked: (index) {
+                _pageController.animateToPage(
+                  index,
+                  duration:
+                      const Duration(milliseconds: 400), // плавный переход
+                  curve: Curves.easeInOut,
+                );
+              },
             ),
           ],
         ),
